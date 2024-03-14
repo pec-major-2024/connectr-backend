@@ -12,9 +12,11 @@ noteRouter.route("/")
     .get(async (req, res) => {
         const date = req?.query?.date;
         const filteredNotes = req?.notes?.filter(note => {
-            return !note?.protect &&
-             new Date(date).toLocaleDateString() === new Date(note?.date).toLocaleDateString()
+            return !note?.protect
+             && new Date(date).toLocaleDateString() === new Date(note?.date).toLocaleDateString()
+             && note != null
         })
+        console.log({ filteredNotes });
         console.log("===Sending User's Note of the Date===");
         filteredNotes.sort((a, b) => new Date(a?.date) - new Date(b?.date)).reverse();
         res.status(200).json({ notes: filteredNotes });
