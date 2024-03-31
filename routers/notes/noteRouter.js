@@ -47,7 +47,7 @@ noteRouter.route("/")
         const note = new Note({ title, content, date: (date || new Date()) });
         const noteId = note._id;
         await note.save();
-        await noteQueue.add(noteId, { raw_text: title + " " + content});
+        await noteQueue.add(noteId, { raw_text: title + " " + content });
         const diary = await Diary.findOne({ user: userId }).exec();
 
         if (diary) {

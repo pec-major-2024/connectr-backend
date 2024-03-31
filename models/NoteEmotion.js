@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const NoteEmotion = new Schema({
+const NoteEmotionSchema = new Schema({
   noteId: {
     type: Schema.Types.ObjectId,
     ref: 'Note',
@@ -26,4 +26,5 @@ const NoteEmotion = new Schema({
   }
 });
 
-export default mongoose.model('NoteEmotion', NoteEmotion);
+const NoteEmotion = mongoose.model('NoteEmotion', NoteEmotionSchema);
+export default NoteEmotion;

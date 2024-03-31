@@ -5,7 +5,7 @@ import favouriteRouter from './favouriteRouter.js';
 import noteRouter from './noteRouter.js';
 import noteSingleRouter from './noteSingleRouter.js';
 import protectRouter from './protectRouter.js';
-import noteWorker from './noteQueue.js';
+import noteQueue from './noteQueue.js';
 
 const notesRouter = Router();
 notesRouter.use(authenticate); //add the _id param to every request
@@ -16,7 +16,6 @@ notesRouter.route("*")
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "X-Requested-With");
         res.header("Content-Type", "application/json");
-        
         next();
     });
 

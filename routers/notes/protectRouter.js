@@ -2,29 +2,30 @@ import { Router } from "express";
 import { isNoteOwner } from "../../auth/authorize.js";
 import Note from "../../models/Note.js";
 const protectRouter = Router();
+import NoteEmotion from "../../models/NoteEmotion.js";
 
 protectRouter.use(isNoteOwner);
 protectRouter.route("/")
     .get(async (req, res) => {
-        try{
+        try {
             const filteredNotes = req?.notes?.filter(note => {
                 return note && note?.protect;
             });
             console.log("===Sending User's Protected Note===");
             res.status(200).json({ notes: filteredNotes });
-        }catch(err) {
+        } catch (err) {
             res.status(500).json({ "msg": err });
         }
     })
-    .put( async (req, res) => {
-        try{
+    .put(async (req, res) => {
+        try {
             const note = await Note.findById(req?.body?.noteId).exec();
             note.protect = !note.protect;
             await note.save();
             console.log("===Updating Note's Protected status===");
-            res.status(200).json({protected: note?.protect});
-        }catch(err){
-            res.status(500).json({"msg":"failed"});
+            res.status(200).json({ protected: note?.protect });
+        } catch (err) {
+            res.status(500).json({ "msg": "failed" });
         }
     })
 
