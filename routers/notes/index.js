@@ -5,6 +5,7 @@ import favouriteRouter from './favouriteRouter.js';
 import noteRouter from './noteRouter.js';
 import noteSingleRouter from './noteSingleRouter.js';
 import protectRouter from './protectRouter.js';
+import noteWorker from './noteQueue.js';
 
 const notesRouter = Router();
 notesRouter.use(authenticate); //add the _id param to every request

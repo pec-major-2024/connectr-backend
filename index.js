@@ -5,7 +5,6 @@ import db from './config/db.js'
 import { corsOptions } from './config/cors.js';
 import userRouter from './routers/user/index.js';
 import notesRouter from './routers/notes/index.js';
-import statsRouter from './routers/stats/index.js';
 import profileRouter from './routers/profile/index.js';
 import './crons/DailyStat.js';
 
@@ -28,5 +27,4 @@ app.get("/", (req, res) => {
 //setup routes 
 app.use("/user", userRouter);
 app.use("/notes", notesRouter);
-app.use("/stats", statsRouter);
 app.use("/profile", profileRouter);

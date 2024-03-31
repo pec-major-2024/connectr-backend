@@ -6,20 +6,34 @@ import NoteEmotion from '../../models/NoteEmotion.js';
 import { isNoteOwner } from '../../auth/authorize.js';
 import { canAddMoreNote } from "../../middlewares/UserNotes.js";
 
+import { Queue } from "bullmq";
+const noteQueue = new Queue('note-queue', {
+    connection: {
+        host: process.env.QUEUE_REDIS_HOST,
+        port: process.env.QUEUE_REDIS_PORT,
+        username: process.env.QUEUE_REDIS_USERNAME,
+        password: process.env.QUEUE_REDIS_PASSWORD,
+    }
+});
+
 const noteRouter = Router();
 
 noteRouter.route("/")
     .get(async (req, res) => {
-        const date = req?.query?.date;
-        const filteredNotes = req?.notes?.filter(note => {
-            return !note?.protect
-             && new Date(date).toLocaleDateString() === new Date(note?.date).toLocaleDateString()
-             && note != null
-        })
-        console.log({ filteredNotes });
-        console.log("===Sending User's Note of the Date===");
-        filteredNotes.sort((a, b) => new Date(a?.date) - new Date(b?.date)).reverse();
-        res.status(200).json({ notes: filteredNotes });
+        try {
+            const date = req?.query?.date;
+            const filteredNotes = req?.notes?.filter(note => {
+                return !note?.protect
+                    && new Date(date).toLocaleDateString() === new Date(note?.date).toLocaleDateString()
+                    && note != null
+            })
+            console.log({ filteredNotes });
+            console.log("===Sending User's Note of the Date===");
+            filteredNotes.sort((a, b) => new Date(a?.date) - new Date(b?.date)).reverse();
+            res.status(200).json({ notes: filteredNotes });
+        } catch (err) {
+            console.log("Failed to fetch user's notes of data=" + date, "because", err);
+        }
     })
 
     .post(canAddMoreNote, async (req, res) => {
@@ -30,9 +44,10 @@ noteRouter.route("/")
         }
         const userId = req.user._id;
 
-        const note = new Note({ title, content, date });
+        const note = new Note({ title, content, date: (date || new Date()) });
         const noteId = note._id;
-        await note.save()
+        await note.save();
+        await noteQueue.add(noteId, { raw_text: title + " " + content});
         const diary = await Diary.findOne({ user: userId }).exec();
 
         if (diary) {
