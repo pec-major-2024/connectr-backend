@@ -26,10 +26,10 @@ export const canAddMoreNote = async (req, res, next) => {
         return new Date(req?.body?.date).toLocaleDateString() === new Date(note?.date).toLocaleDateString()
     }).length;
 
-    if (user.premium && notesAddedToday < 8){
+    if (user.premium && notesAddedToday < 2){
         next(); return;
     }
-    if (!user.premium && notesAddedToday < 2){
+    if (!user.premium && notesAddedToday < 10){
         next(); return;
     }
     res.status(405).json({msg: "Cannot add more notes"});

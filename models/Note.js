@@ -23,6 +23,22 @@ const noteSchema = new Schema({
     date: { // timezone matches the client side 
         type: String,
         required: true
+    },
+    match: {
+        type: {
+            state: {
+                type: String,
+                enum: ['Initiated', 'Pending', 'Completed'],
+                default: 'Initiated'
+            },
+            buddy: {
+                type: Schema.Types.ObjectId,
+                ref: 'Note',
+                default: null,
+            }
+        },
+        default: null,
+        _id: false,
     }
 }, { timestamps: true });
 

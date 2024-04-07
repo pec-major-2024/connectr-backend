@@ -6,7 +6,7 @@ import { corsOptions } from './config/cors.js';
 import userRouter from './routers/user/index.js';
 import notesRouter from './routers/notes/index.js';
 import profileRouter from './routers/profile/index.js';
-import './crons/DailyStat.js';
+import './crons/MatchingBuddy.js';
 
 const port = process.env.PORT;
 const app = express();

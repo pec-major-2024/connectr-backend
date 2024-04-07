@@ -9,16 +9,17 @@ const NoteEmotionSchema = new Schema({
   },
   emotion: {
     type: {
-      anger: { type: Number, default: null },
-      disgust: { type: Number, default: null },
-      fear: { type: Number, default: null },
-      joy: { type: Number, default: null },
-      neutral: { type: Number, default: null },
-      sadness: { type: Number, default: null },
-      shame: { type: Number, default: null },
-      surprise: { type: Number, default: null }
+      anger: { type: Number, default: 0 },
+      disgust: { type: Number, default: 0 },
+      fear: { type: Number, default: 0 },
+      joy: { type: Number, default: 0 },
+      neutral: { type: Number, default: 0 },
+      sadness: { type: Number, default: 0 },
+      shame: { type: Number, default: 0 },
+      surprise: { type: Number, default: 0 }
     },
-    required: true
+    required: true,
+    _id: false,
   },
   keywords: {
     type: [String],
