@@ -1,4 +1,4 @@
-import { Worker } from "bullmq";
+import { QueueEvents, Worker } from "bullmq";
 import axios from "axios";
 import NoteEmotion from "../../models/NoteEmotion.js";
 
@@ -17,8 +17,8 @@ const noteQueue = new Worker('note-queue', async (job) => {
         await noteEmotion.save();
         console.log("Note emotion saved successfully:", noteEmotion);
     } catch (err) {
-        console.error("Error creating note emotion:", err);
-        return { success: false, error: err.message };
+        console.log("error", err)
+        console.log("Error creating note emotion:", err);
     }
     // call localhost:8080/predict
     // save the data in note emotion
@@ -34,3 +34,24 @@ const noteQueue = new Worker('note-queue', async (job) => {
 )
 
 export default noteQueue;
+
+const queueEvents = new QueueEvents('note-queue');
+queueEvents.on('failed', async (job, error) => {
+    const raw_text = job.data?.raw_text;
+    const noteId = job.name;
+    console.log("===Creating note emotion for the note id:", job.name, "===");
+    try {
+        const response = await axios.post(`${process.env.CONNECTR_AI_SERVICE_URL}/predict?raw_text=${raw_text}`);
+        const { probability_dict, most_common_words } = response.data;
+        const noteEmotion = new NoteEmotion({
+            noteId,
+            emotion: probability_dict,
+            keywords: most_common_words
+        });
+        await noteEmotion.save();
+        console.log("Note emotion saved successfully:", noteEmotion);
+    } catch (err) {
+        console.error("Error creating note emotion:", err);
+        return { success: false, error: err.message };
+    }
+});

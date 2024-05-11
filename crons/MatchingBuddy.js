@@ -47,6 +47,7 @@ function keywordSimilarity(keywordSetA, keywordSetB) {
 }
 
 function weightedSimilarity(noteA, noteB) {
+  if (!noteA || !noteB) return 0;
   const emotionSimilarityScore = emotionSimilarity(noteA.emotion, noteB.emotion);
   const keywordSimilarityScore = keywordSimilarity(new Set(noteA.keywords), new Set(noteB.keywords));
   console.log({ emotionSimilarityScore, keywordSimilarityScore })

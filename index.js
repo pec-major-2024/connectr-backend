@@ -7,6 +7,7 @@ import userRouter from './routers/user/index.js';
 import notesRouter from './routers/notes/index.js';
 import profileRouter from './routers/profile/index.js';
 import './crons/MatchingBuddy.js';
+import matchingsRouter from './routers/matching/index.js';
 
 const port = process.env.PORT;
 const app = express();
@@ -28,3 +29,4 @@ app.get("/", (req, res) => {
 app.use("/user", userRouter);
 app.use("/notes", notesRouter);
 app.use("/profile", profileRouter);
+app.use("/matching", matchingsRouter);
